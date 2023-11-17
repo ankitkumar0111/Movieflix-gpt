@@ -3,9 +3,13 @@ import Header from "./Header";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  updateProfile
 } from "firebase/auth";
 import { checkValidData } from "../utils/validate";
 import { auth } from "../utils/firebase";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
 
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
@@ -14,6 +18,9 @@ const Login = () => {
   const email = useRef(null);
   const password = useRef(null);
   const fullName = useRef(null);
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleButtonClick = () => {
     const message = checkValidData(
@@ -35,7 +42,18 @@ const Login = () => {
       )
         .then((userCredential) => {
           const user = userCredential.user;
-          console.log(user);
+          updateProfile(user, {
+            displayName: fullName.current.value, photoURL: "https://www.hindustantimes.com/static-content/1y/cricket-logos/players/virat-kohli.png"
+          }).then(() => {
+            // Profile updated!
+            const { uid, email, displayName, photoURL} = auth.currentUser; //as we are dispatching add user here because when we are 
+            //logging the onAuthstatechange api call so at that time updateprofile api was not able to update the user  
+          dispatch(addUser({ uid: uid, email: email, displayName: displayName, photoURL: photoURL}));
+           navigate("/browse")
+          }).catch((error) => {
+            // An error occurred
+            setErrorMessage(error.message)
+          });
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -52,6 +70,7 @@ const Login = () => {
         .then((userCredential) => {
           const user = userCredential.user;
           console.log(user);
+          navigate("/browse")
         })
         .catch((error) => {
           const errorCode = error.code;
