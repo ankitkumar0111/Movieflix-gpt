@@ -1,10 +1,12 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {   addUpcomingMovies } from "../utils/moviesSlice";
 import { useEffect } from "react";
 import { API_OPTIONS } from "../utils/constants";
 
 const useUpcomingMovies = () => {
     const dispatch = useDispatch()
+
+    const upcomingMovies = useSelector((store) => store.movies.upcomingMovies)
 
     const getUpcomingMovies = async () => {
       const data = await 
@@ -15,7 +17,8 @@ const useUpcomingMovies = () => {
     }
   
     useEffect(() => {
-      getUpcomingMovies();
+      !upcomingMovies && getUpcomingMovies();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 }
 
