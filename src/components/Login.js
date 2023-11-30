@@ -94,18 +94,18 @@ const Login = () => {
     setIsSignInForm(!isSignInForm);
   };
   return (
-    <div>
+    <div className="">
       <Header />
       <div className="absolute">
         <img
-          className="object-contain"
+          className="h-screen object-cover"
           src={BG_URL}
           alt="background"
         />
       </div>
       <form
         onSubmit={(e) => e.preventDefault()}
-        className="w-[28%] p-12 bg-black absolute my-36 mx-auto right-0 left-0 text-white bg-opacity-80 rounded-lg"
+        className="w-3/4 md:w-[28%] p-4 md:p-12 bg-black absolute my-36 mx-auto right-0 left-0 text-white bg-opacity-80 rounded-lg"
       >
         <h1 className="font-bold text-3xl py-4">
           {isSignInForm ? "Sign In" : "Sign Up"}
